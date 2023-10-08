@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.UI;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using NPOI.HSSF.Util;
@@ -65,15 +66,18 @@ namespace ViveSR
                 int CombinefocusableLayer = 0;
                 //------------------------------
 
-                public bool set = false;
+                public GameObject Sphere;
+                Rotate RotateMethod;
+                public bool set = true;
                 public string filePath; // Excelファイルの名前とパス
-                public string name;     // シート名
                 int i = 1;
                 IWorkbook workbook;
                 ISheet sheet;
 
                 void Start()
                 {
+                    RotateMethod = Sphere.gameObject.GetComponent< Rotate >();
+
                     // ワークブックを作成
                     using (FileStream stream = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.Read, FileShare.ReadWrite))
                     {
@@ -81,45 +85,47 @@ namespace ViveSR
                         stream.Close();
                     }
                     // ワークシートを作成
-                    sheet = workbook.CreateSheet(name);
-                    
+                    sheet = workbook.CreateSheet(RotateMethod.name);
+
+                    //ヘッダーの作成
+                    sheet.CreateRow(0).CreateCell(0).SetCellValue("FlameNum");
+                    sheet.GetRow(0).CreateCell(1).SetCellValue("LeftPupil(x)");
+                    sheet.GetRow(0).CreateCell(2).SetCellValue("LeftPupil(y)");
+                    sheet.GetRow(0).CreateCell(3).SetCellValue("RightPupil(x)");
+                    sheet.GetRow(0).CreateCell(4).SetCellValue("RightPupil(y)");
+                    sheet.GetRow(0).CreateCell(5).SetCellValue("LeftBlink");
+                    sheet.GetRow(0).CreateCell(6).SetCellValue("RightBlink");
+                    sheet.GetRow(0).CreateCell(7).SetCellValue("CombineGazeRayOrigin(x)");
+                    sheet.GetRow(0).CreateCell(8).SetCellValue("CombineGazeRayOrigin(y)");
+                    sheet.GetRow(0).CreateCell(9).SetCellValue("CombineGazeRayOrigin(z)");
+                    sheet.GetRow(0).CreateCell(10).SetCellValue("CombineGazeRayDirection(x)");
+                    sheet.GetRow(0).CreateCell(11).SetCellValue("CombineGazeRayDirection(y)");
+                    sheet.GetRow(0).CreateCell(12).SetCellValue("CombineGazeRayDirection(z)");
+                    sheet.GetRow(0).CreateCell(13).SetCellValue("LeftGazeRayOrigin(x)");
+                    sheet.GetRow(0).CreateCell(14).SetCellValue("LeftGazeRayOrigin(y)");
+                    sheet.GetRow(0).CreateCell(15).SetCellValue("LeftGazeRayOrigin(z)");
+                    sheet.GetRow(0).CreateCell(16).SetCellValue("LeftGazeRayDirection(x)");
+                    sheet.GetRow(0).CreateCell(17).SetCellValue("LeftGazeRayDirection(y)");
+                    sheet.GetRow(0).CreateCell(18).SetCellValue("LeftGazeRayDirection(z)");
+                    sheet.GetRow(0).CreateCell(19).SetCellValue("RightGazeRayOrigin(x)");
+                    sheet.GetRow(0).CreateCell(20).SetCellValue("RightGazeRayOrigin(y)");
+                    sheet.GetRow(0).CreateCell(21).SetCellValue("RightGazeRayOrigin(z)");
+                    sheet.GetRow(0).CreateCell(22).SetCellValue("RightGazeRayDirection(x)");
+                    sheet.GetRow(0).CreateCell(23).SetCellValue("RightGazeRayDirection(y)");
+                    sheet.GetRow(0).CreateCell(24).SetCellValue("RightGazeRayDirection(z)");
+                    sheet.GetRow(0).CreateCell(25).SetCellValue("deltaTime");
+
                 }
 
                 //1フレーム毎に実行
                 void Update()
                 {
-                    if (Input.GetKeyDown(KeyCode.Return))
+                    if (RotateMethod.start)
                     {
-                        //ヘッダーの作成
-                        sheet.CreateRow(0).CreateCell(0).SetCellValue("FlameNum");
-                        sheet.GetRow(0).CreateCell(1).SetCellValue("LeftPupil(x)");
-                        sheet.GetRow(0).CreateCell(2).SetCellValue("LeftPupil(y)");
-                        sheet.GetRow(0).CreateCell(3).SetCellValue("RightPupil(x)");
-                        sheet.GetRow(0).CreateCell(4).SetCellValue("RightPupil(y)");
-                        sheet.GetRow(0).CreateCell(5).SetCellValue("LeftBlink");
-                        sheet.GetRow(0).CreateCell(6).SetCellValue("RightBlink");
-                        sheet.GetRow(0).CreateCell(7).SetCellValue("CombineGazeRayOrigin(x)");
-                        sheet.GetRow(0).CreateCell(8).SetCellValue("CombineGazeRayOrigin(y)");
-                        sheet.GetRow(0).CreateCell(9).SetCellValue("CombineGazeRayOrigin(z)");
-                        sheet.GetRow(0).CreateCell(10).SetCellValue("CombineGazeRayDirection(x)");
-                        sheet.GetRow(0).CreateCell(11).SetCellValue("CombineGazeRayDirection(y)");
-                        sheet.GetRow(0).CreateCell(12).SetCellValue("CombineGazeRayDirection(z)");
-                        sheet.GetRow(0).CreateCell(13).SetCellValue("LeftGazeRayOrigin(x)");
-                        sheet.GetRow(0).CreateCell(14).SetCellValue("LeftGazeRayOrigin(y)");
-                        sheet.GetRow(0).CreateCell(15).SetCellValue("LeftGazeRayOrigin(z)");
-                        sheet.GetRow(0).CreateCell(16).SetCellValue("LeftGazeRayDirection(x)");
-                        sheet.GetRow(0).CreateCell(17).SetCellValue("LeftGazeRayDirection(y)");
-                        sheet.GetRow(0).CreateCell(18).SetCellValue("LeftGazeRayDirection(z)");
-                        sheet.GetRow(0).CreateCell(19).SetCellValue("RightGazeRayOrigin(x)");
-                        sheet.GetRow(0).CreateCell(20).SetCellValue("RightGazeRayOrigin(y)");
-                        sheet.GetRow(0).CreateCell(21).SetCellValue("RightGazeRayOrigin(z)");
-                        sheet.GetRow(0).CreateCell(22).SetCellValue("RightGazeRayDirection(x)");
-                        sheet.GetRow(0).CreateCell(23).SetCellValue("RightGazeRayDirection(y)");
-                        sheet.GetRow(0).CreateCell(24).SetCellValue("RightGazeRayDirection(z)");
-                        set = true;
-                        
+                        WriteExcel();
                     }
-                    if (Input.GetKeyDown(KeyCode.Space))
+
+                    if (RotateMethod.finish && set)
                     {
                         // Excelファイルを保存
                         using (FileStream fs = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.Write))
@@ -130,11 +136,6 @@ namespace ViveSR
 
                         Debug.Log("Excelファイルが作成されました: " + filePath);
                         set = false;
-                    }
-
-                    if (set)
-                    {
-                        WriteExcel();
                     }
                 }
 
@@ -235,6 +236,7 @@ namespace ViveSR
                         Debug.Log("Combine Focus Point" + CombineFocus.point.x + ", " + CombineFocus.point.y + ", " + CombineFocus.point.z);
                     }
                     //------------------------------
+                    sheet.GetRow(i).CreateCell(25).SetCellValue(Time.deltaTime);
                     i += 1;
                     Debug.Log(i);
                 }
