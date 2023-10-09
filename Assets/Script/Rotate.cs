@@ -7,7 +7,7 @@ public class Rotate : MonoBehaviour
     //âÒì]ë¨ìx
     public float rotationSpeed = 0f;
     //åªç›ÇÃâÒì]äpìx
-    private float rotation_z = 0f;
+    private float rotation_z;
 
     public float Acceleration = 120f;
     private float[] rotationTimes = new float[] { 7, 5, 4, 5, 6, 7, 4, 3, 7, 6, 2, 6, 6, 4, 5, 6, 2, 7, 3, 3, 2, 6, 6, 7, 3, 5, 6, 5, 5, 5, 5, 3, 7, 7, 3, 3, 6, 2 };
@@ -18,6 +18,11 @@ public class Rotate : MonoBehaviour
     public bool start = false;
     public bool finish = false;
     public string name;
+
+    void Start()
+    {
+        rotation_z = this.gameObject.transform.rotation.z;
+    }
 
     // Update is called once per frame
     void Update()
@@ -55,7 +60,8 @@ public class Rotate : MonoBehaviour
                 return;
             }
         }
-        rotation_z += rotationSpeed * Time.deltaTime;
-        transform.rotation = Quaternion.Euler(0, 0, rotation_z);
+        rotation_z = rotationSpeed * Time.deltaTime;
+        //transform.rotation = Quaternion.Euler(this.transform.rotation.x, this.gameObject.transform.rotation.y, rotation_z);
+        this.transform.Rotate(0, 0, rotation_z, Space.World);
     }
 }
